@@ -4,11 +4,13 @@ export PORT=1032
 
 function start_model_server {
 
-    ulimit -n 65536 && CUDA_VISIBLE_DEVICES=6 ../launch_scripts/launch_vllm \
+    ulimit -n 65536 && ../launch_scripts/launch_vllm \
         --port $PORT \
-        --model facebook/opt-13b \
+	--device cpu \
+	--swap-space 4 \
+        --model lmsys/vicuna-7b-v1.5 \
         --max-num-batched-tokens 8100 \
-        --use-np-weights \
+#        --use-np-weights \
         2>&1 &
 
     while [ "$(curl -s http://localhost:${PORT}/is_ready | grep true | wc -l)" -eq 0 ]; do
